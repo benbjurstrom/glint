@@ -1,78 +1,69 @@
 # A Cloudflare Images library for Laravel
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/benbjurstrom/glinty.svg?style=flat-square)](https://packagist.org/packages/benbjurstrom/glinty)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/benbjurstrom/glinty/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/benbjurstrom/glinty/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/benbjurstrom/glinty/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/benbjurstrom/glinty/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/benbjurstrom/glinty.svg?style=flat-square)](https://packagist.org/packages/benbjurstrom/glinty)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/benbjurstrom/glint.svg?style=flat-square)](https://packagist.org/packages/benbjurstrom/glint)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/benbjurstrom/glint/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/benbjurstrom/glint/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/benbjurstrom/glint/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/benbjurstrom/glint/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
 
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/glinty.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/glinty)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+## ️⚠️ WARNING: This package is still in development and not ready for production use. ⚠️
+For example, currently there's no option to use a custom model in place of the package's Image and ImageType models. I'll add that functionality once my implementation is stable.
 
 ## Installation
 
-You can install the package via composer:
+Install the package via composer:
 
 ```bash
-composer require benbjurstrom/glinty
+composer require benbjurstrom/glint
 ```
 
-You can publish and run the migrations with:
+Add cloudflare credentials to your services config file:
+```bash
+// config/services.php
+'cloudflare' => [
+    'account_hash' => env('CLOUDFLARE_IMAGES_ACCOUNT_HASH'),
+    'account_id' => env('CLOUDFLARE_IMAGES_ACCOUNT_ID'),
+    'api_token' => env('CLOUDFLARE_IMAGES_API_TOKEN'),
+    'signing_key' => env('CLOUDFLARE_IMAGES_SIGNING_KEY'),
+],
+```
+Then publish and run the migrations with:
 
 ```bash
-php artisan vendor:publish --tag="glinty-migrations"
+php artisan vendor:publish --tag="glint-migrations"
 php artisan migrate
-```
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="glinty-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="glinty-views"
 ```
 
 ## Usage
 
+
+### Client upload
+
+Since there's so many ways to handle authentication, authorization, and response formatting this is left to the user to implement. But an example controller might look something like this:
 ```php
-$glinty = new BenBjurstrom\Glinty();
-echo $glinty->echoPhrase('Hello, BenBjurstrom!');
+    public function store(Request $request)
+    {
+        Gate::authorize('uploadImages', [
+            $request->user()
+        ]);
+
+        $data = $request->validate([
+            'type_id' => 'required|uuid|exists:image_types,id',
+            'model_id' => 'required|uuid',
+            'model_type' => 'required',
+        ]);
+
+        $modelName = Relation::getMorphedModel($data['model_type']) ?? $data['model_type'];
+        $model = (new $modelName)->findOrFail($data['model_id']);
+        throw_unless($model instanceof HasImagesInterface, 
+            \Exception::class, 'Model does not implement HasImagesInterface'
+        );
+
+        $type = ImageType::findOrFail($data['type_id']);
+        $image = $model->addImageFromDraft($type);
+
+        return response()->json($image);
+    }
 ```
-
-## Testing
-
-```bash
-composer test
-```
-
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
 ## Credits
 

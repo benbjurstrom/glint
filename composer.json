@@ -1,12 +1,12 @@
 {
-    "name": "benbjurstrom/glinty",
+    "name": "benbjurstrom/glint",
     "description": "A Cloudflare Images library for Laravel",
     "keywords": [
         "benbjurstrom",
         "laravel",
-        "glinty"
+        "glint"
     ],
-    "homepage": "https://github.com/benbjurstrom/glinty",
+    "homepage": "https://github.com/benbjurstrom/glint",
     "license": "MIT",
     "authors": [
         {
@@ -17,8 +17,12 @@
     ],
     "require": {
         "php": "^8.1",
-        "spatie/laravel-package-tools": "^1.14.0",
-        "illuminate/contracts": "^10.0"
+        "ext-gd": "*",
+        "benbjurstrom/cloudflare-images-php": "^0.5.0",
+        "illuminate/contracts": "^9.0|^10.0",
+        "kornrunner/blurhash": "^1.2",
+        "sammyjo20/saloon-laravel": "^2.0",
+        "spatie/laravel-package-tools": "^1.14.0"
     },
     "require-dev": {
         "laravel/pint": "^1.0",
@@ -34,13 +38,13 @@
     },
     "autoload": {
         "psr-4": {
-            "BenBjurstrom\\Glinty\\": "src",
-            "BenBjurstrom\\Glinty\\Database\\Factories\\": "database/factories"
+            "BenBjurstrom\\Glint\\": "src",
+            "BenBjurstrom\\Glint\\Database\\Factories\\": "database/factories"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BenBjurstrom\\Glinty\\Tests\\": "tests"
+            "BenBjurstrom\\Glint\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -60,10 +64,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "BenBjurstrom\\Glinty\\GlintyServiceProvider"
+                "BenBjurstrom\\Glint\\GlintServiceProvider"
             ],
             "aliases": {
-                "Glinty": "BenBjurstrom\\Glinty\\Facades\\Glinty"
+                "Glint": "BenBjurstrom\\Glint\\Facades\\Glint"
             }
         }
     },

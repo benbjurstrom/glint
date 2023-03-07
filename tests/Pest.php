@@ -1,5 +1,5 @@
 <?php
 
-use BenBjurstrom\Glinty\Tests\TestCase;
+use BenBjurstrom\Glint\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

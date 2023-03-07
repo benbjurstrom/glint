@@ -1,3 +1,3 @@
 # Changelog
 
-All notable changes to `glinty` will be documented in this file.
+All notable changes to `glint` will be documented in this file.

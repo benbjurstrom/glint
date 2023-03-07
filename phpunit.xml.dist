@@ -33,4 +33,10 @@
     <logging>
         <junit outputFile="build/report.junit.xml"/>
     </logging>
+    <php>
+        <env name="CLOUDFLARE_IMAGES_ACCOUNT_HASH" value="CLOUDFLARE_IMAGES_ACCOUNT_HASH"/>
+        <env name="CLOUDFLARE_IMAGES_ACCOUNT_ID" value="CLOUDFLARE_IMAGES_ACCOUNT_ID"/>
+        <env name="CLOUDFLARE_IMAGES_API_TOKEN" value="CLOUDFLARE_IMAGES_API_TOKEN"/>
+        <env name="CLOUDFLARE_IMAGES_SIGNING_KEY" value="CLOUDFLARE_IMAGES_SIGNING_KEY"/>
+    </php>
 </phpunit>
