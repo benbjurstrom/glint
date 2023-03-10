@@ -15,11 +15,13 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property string $id
  * @property bool $is_draft
  * @property string $cloudflare_id
- * @property string $blur_hash
+ * @property ?string $blur_hash
  * @property string $model_id
  * @property string $model_type
  * @property string $type_id
  * @property string $verified_at
+ * @property ?string $upload_url
+ * @property \Carbon\Carbon $created_at
  */
 class Image extends Model
 {
