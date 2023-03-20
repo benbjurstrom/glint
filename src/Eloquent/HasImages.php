@@ -79,7 +79,7 @@ trait HasImages
         $response = app(CloudflareImages::class)
             ->images()
             ->withMetadata(Glint::prepareMetadata($this, $type))
-            ->creteFromUrl($url);
+            ->createFromUrl($url);
 
         return Glint::saveImage($this, $response->id, $type);
     }
