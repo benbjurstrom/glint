@@ -41,10 +41,8 @@ trait HasImages
 
     protected static function booted(): void
     {
-        static::deleting(function (Image $image) {
-            $this->images()->each(function (Image $image) {
-                $image->delete();
-            });
+        static::deleting(function () {
+            $this->removeAllImages();
         });
     }
 
@@ -68,6 +66,20 @@ trait HasImages
             ->create($fileContents, $fileName);
 
         return Glint::saveImage($this, $response->id, $type);
+    }
+
+    public function removeImage(string $id): void
+    {
+        app(CloudflareImages::class)
+            ->images()
+            ->delete($id);
+    }
+
+    public function removeAllImages(): void
+    {
+        $this->images()->each(function (Image $image) {
+            $image->delete();
+        });
     }
 
     public function addImageFromUrl(string $url, string|ImageType $type): Image
