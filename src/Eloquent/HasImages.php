@@ -4,6 +4,7 @@ namespace BenBjurstrom\Glint\Eloquent;
 
 use BenBjurstrom\CloudflareImages\CloudflareImages;
 use BenBjurstrom\Glint\Glint;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait HasImages
@@ -41,8 +42,8 @@ trait HasImages
 
     protected static function booted(): void
     {
-        static::deleting(function () {
-            $this->removeAllImages();
+        static::deleting(function (Model $model) {
+            $model->removeAllImages();
         });
     }
 
